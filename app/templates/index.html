@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>The Great origanon game</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <script src="{{ url_for('static', filename='js/Navigation.js') }}"></script>
+    <style>
+        html, body {
+            height: 100%;
+        }
+         /* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hidden {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="container h-100">
+
+    <div class="p-5 text-center">
+        <h1>The Great Origanon Game!</h1>
+    </div>
+
+    <main>
+        {% for message in get_flashed_messages() %}
+            <li>{{ message }}</li>
+        {% endfor %}
+    </main>
+
+    {% for name, data in teams.items() %}
+        <div class="p-1">
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                     role="progressbar"
+                     style="width: {{ data['progress'] }}%; background-color: {{ data['color'] }};"
+                     aria-valuenow="{{ data['progress'] }}" aria-valuemin="0" aria-valuemax="100">
+                    {{ name }}: {{ data['progress'] }}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+
+    <div class="row row-eq-height pt-3" style="display: flex;">
+    <div class="col-md-8" style="min-height: 50vh;">
+        <div class="bg-danger h-100 rounded" style="background-repeat: no-repeat;
+                background-size: cover;background-image:url('{{ url_for('static', filename='map.png') }}');">
+            main content
+        </div>
+    </div>
+        <div class="col-md-4 overflow-auto scrollbar-hidden" style="max-height: 50vh;">
+            <ul class="list-group mb-3">
+                {% for w in waypoints %}
+                <li class="list-group-item d-flex justify-content-between lh-condensed">
+                    <div>
+                        <h6 class="my-0">{{ w['name'] }}</h6>
+                        <small class="text-muted">{{ w['description'] }}</small>
+                    </div>
+                  <span class="text-muted">&checkmark;</span>
+
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+
+</body>
+</html>
