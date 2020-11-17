@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>The Great origanon game</title>
+</head>
+
+<body>
+<div>
+{% for w in waypoints %}
+    <img style="border: solid 2px black" alt="{{ w.name }}" src="{{ url_for('main.qr_image', token=w.token) }}">
+{% endfor %}
+</div>
+
+
+</body>
+</html>

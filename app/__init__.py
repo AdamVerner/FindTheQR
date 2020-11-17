@@ -1,5 +1,6 @@
 import os
 import logging
+from random import getrandbits
 
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
@@ -20,19 +21,21 @@ def get_log_file(app) -> str:
 
 def create_app():
     app = Flask(__name__)
+    app.secret_key = str(getrandbits(64))
+    app.config.setdefault('SQLALCHEMY_DATABASE_URI', 'sqlite:///../app.db')
+    app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
+
     db.init_app(app)
 
     with app.app_context():
         db.create_all()
         db.engine.dispose()
-
         migrate.init_app(app, db)
 
     from app.routes import bp as main_bp
 
     app.register_blueprint(main_bp)
 
-    app.logger.setLevel(logging.INFO)
-    app.logger.info("Netio Cloud startup")
+    app.logger.setLevel(logging.DEBUG)
 
     return app
