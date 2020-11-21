@@ -1,5 +1,6 @@
 from flask import render_template, request, session
 
+from app.forms import ClaimWaypoint
 from app.models import Waypoint, Team
 from app.routes import bp
 
@@ -8,7 +9,11 @@ from app.routes import bp
 def found(token: str):
     waypoint = Waypoint.query.filter_by(token=token).first_or_404()
     teams = Team.query.all()
-    return render_template('found.html', waypoint=waypoint, teams=teams)
+
+    form = ClaimWaypoint(teams)
+    print(form, *form)
+
+    return render_template('found.html', waypoint=waypoint, teams=teams, form=form)
 
 
 @bp.route('/report', methods=['POST', 'GET'])
