@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>The Great origanon game</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-    <script src="{{ url_for('static', filename='js/Navigation.js') }}"></script>
+    <script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
+    <script type="text/javascript" src="{{url_for('main.map_gen')}}"></script>
+
     <style>
         html, body {
             height: 100%;
@@ -46,8 +48,11 @@
 
     <div class="row row-eq-height pt-3" style="display: flex;">
         <div class="col-md-8" style="min-height: 50vh;">
-            <div class="h-100 rounded" style="background-repeat: no-repeat;
-                    background-size: cover;background-image:url('{{ url_for('static', filename='map.png') }}');">
+            <div id="map" class="h-100 rounded" >
+            <!--     style=" background-repeat: no-repeat;
+                         background-size: cover;
+                         background-image:url('{{ url_for('static', filename='map.png') }}');
+                         "> -->
             </div>
         </div>
         <div class="col-md-4 overflow-auto scrollbar-hidden" style="max-height: 50vh;">
