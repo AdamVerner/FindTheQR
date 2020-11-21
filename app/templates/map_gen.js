@@ -23,9 +23,9 @@ document.addEventListener("DOMContentLoaded", function(){
         layer.enable();
 
         console.log('pasting coords into map');
-        {% for p in waypoints %}
-        let card = addPoint({{ p.coord_x }}, {{ p.coord_y }}, "{{ p.name }}", "{{p.description}}");
-        {% endfor %}
+        //{% for p in waypoints %}
+        let card = addPoint("{{ p.coord_x }}", "{{ p.coord_y }}", "{{ p.name }}", "{{p.description}}");
+        //{% endfor %}
 
     });
     console.log('calling Loader finished');
