@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% from "components/form.html" import render_form %}
+
+{% block content %}
+  <div class="container">
+    <div style="max-width: 330px; margin: 0 auto">
+      {{ render_form(form) }}
+      <script>
+        document.getElementById('color').addEventListener('change', function () {
+          document.getElementById('color').style.backgroundColor = document.getElementById('color').value;
+        })
+        document.getElementById('color').style.backgroundColor = document.getElementById('color').value;
+      </script>
+    </div>
+  </div>
+
+{% endblock %}

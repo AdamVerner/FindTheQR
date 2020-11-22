@@ -1,0 +1,14 @@
+{% macro team_progress(teams, max) %}
+    {% for team in teams %}
+        <div class="p-1">
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"
+                     role="progressbar"
+                     style="width: {{ team.found_total / max * 100}}%; background-color: {{ team.color }};"
+                     aria-valuenow="{{ team.found_total }}" aria-valuemin="0" aria-valuemax="{{ max }}">
+                    {{ team.name }}: {{ team.found_total }}
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endmacro %}

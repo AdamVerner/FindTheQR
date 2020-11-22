@@ -1,3 +1,4 @@
+import os
 from io import StringIO, BytesIO
 
 import qrcode
@@ -5,15 +6,22 @@ from flask import send_file, url_for, render_template
 from PIL import ImageDraw, ImageFont
 
 from app.models import Waypoint
-from app.routes import bp
+from app.routes import admin_bp as bp
+
+
+def get_font():
+    this = os.path.abspath(os.path.dirname(__file__))
+    arial = os.path.join(this, '../static/arial.ttf')
+    return ImageFont.truetype(arial, 30)
 
 
 def random_qr(url, name):
     qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)
     qr.add_data(url)
-    qr.make(fit=True)
+    qr.make()
     img = qr.make_image()
-    ImageDraw.Draw(img).text((0, 0), name, font=ImageFont.truetype('arial', 30))  # Coordinates  # Text
+
+    ImageDraw.Draw(img).text((0, 0), name, font=get_font())  # Coordinates  # Text
 
     return img
 
@@ -34,4 +42,4 @@ def qr_image(token):
 @bp.route('/all_images')
 def all_images():
     waypoints = Waypoint.query.all()
-    return render_template('all_images.html', waypoints=waypoints)
+    return render_template('admin/all_images.html', waypoints=waypoints)

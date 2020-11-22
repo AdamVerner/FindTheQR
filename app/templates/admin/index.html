@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% from "components/progress.html" import team_progress %}
+
+{% block title %}Game administration{% endblock %}
+
+{% block head %}
+  <style>
+    html, body {
+      height: 100%;
+    }
+
+    .waypoint-listing:hover {
+      background-color: #e9ecef;
+    }
+
+    .dot {
+      height: 10px;
+      width: 10px;
+      background-color: #bbb;
+      border-radius: 50%;
+      display: inline-block;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <a class="btn btn-secondary" href="{{ url_for('main.index') }}" role="button">Home</a>
+  <a class="btn btn-primary" href="{{ url_for('.add_team') }}" role="button">Add Team</a>
+  <a class="btn btn-primary" href="{{ url_for('.add_waypoint') }}" role="button">Add Waypoint</a>
+  <a class="btn btn-primary" href="{{ url_for('.all_images') }}" role="button">All QR images</a>
+  <a class="btn btn-danger" href="{{ logout }}" role="button">Log Out</a>
+
+  <div class="row row-eq-height pt-3" style="display: flex;">
+    <!-- List of waypoints -->
+    <div class="col-md-4 overflow-auto" style="max-height: 50vh;">
+      <ul class="list-group mb-3">
+        {% for w in waypoints %}
+          <li class="waypoint-listing list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">{{ w['name'] }}</h6>
+              <small class="text-muted">{{ w['description'] }}</small>
+            </div>
+
+            <span class="text-muted">
+              {% for team in w.owners %}
+              <span title="{{ team.name }}" style="color: {{ team.color }}">&checkmark;</span>
+              {% endfor %}
+            </span>
+
+            <span class="text-muted">
+              <a href="{{ url_for('main.found', token=w.token) }}">
+                <img src="{{ url_for('static', filename='link.png') }}" width="20px">
+              </a>
+              <a href="{{ url_for('.remove_waypoint', id=w.id) }}" onclick="return confirm('Are you sure?')">
+                <img src="{{ url_for('static', filename='bin.png') }}" width="20px">
+              </a>
+            </span>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- List of teams -->
+    <div class="col-md-4 overflow-auto" style="max-height: 50vh;">
+      <ul class="list-group mb-3">
+        {% for team in teams %}
+          <li class="waypoint-listing list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">{{ team.name }}</h6>
+              <small class="text-muted">color:
+                <span class="dot" style="background-color: {{ team.color }}"></span></small>
+            </div>
+
+            <span class="text-muted">
+              <a href="{{ url_for('.remove_team', id=team.id) }}" onclick="return confirm('Are you sure?')">
+                <img src="{{ url_for('static', filename='bin.png') }}" width="20px">
+              </a>
+            </span>
+
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <!-- List of founds -->
+    <div class="col-md-4 overflow-auto" style="max-height: 50vh;">
+      <ul class="list-group mb-3">
+        {% for f in finds %}
+          <li class="waypoint-listing list-group-item d-flex justify-content-between lh-condensed">
+            <div>
+              <h6 class="my-0">{{ f.waypoint.name }}</h6>
+              <small class="text-muted">{{ f.timestamp.strftime("%d.%m  %H:%M") }}:
+                {{ f.signature }}
+              </small>
+            </div>
+
+            <span class="text-muted">
+                            <a href="{{ url_for('.remove_find', id=f.id) }}"
+                               onclick="return confirm('Are you sure?')">
+                              <img src="{{ url_for('static', filename='bin.png') }}" width="20px">
+                            </a>
+                        </span>
+
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+  </div>
+{% endblock %}

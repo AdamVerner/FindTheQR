@@ -9,7 +9,7 @@
 <body>
 <div>
 {% for w in waypoints %}
-    <img style="border: solid 2px black" alt="{{ w.name }}" src="{{ url_for('main.qr_image', token=w.token) }}">
+    <img style="border: solid 2px black" alt="{{ w.name }}" src="{{ url_for('.qr_image', token=w.token) }}">
 {% endfor %}
 </div>
 

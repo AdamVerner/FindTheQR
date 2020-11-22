@@ -1,35 +1,13 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>The Great origanon game</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-    <script src="{{ url_for('static', filename='js/Navigation.js') }}"></script>
-    <style>
-        html, body {
-            height: 100%;
-        }
-    </style>
-</head>
+{% extends "base.html" %}
+{% from "components/form.html" import render_form %}
 
-<body class="bg-light">
-<div class="container text-center">
-    <div class="p-5 text-center">
-        <h1>The Great Origanon Game!</h1>
+{% block content %}
+  <div class="container">
+    <h1 class="h3 mb-3 font-weight-normal text-center">
+      You've found <i>"{{ waypoint.name }}"</i></h1>
+    <div style="max-width: 330px; margin: 0 auto">
+      {{ render_form(form) }}
     </div>
+  </div>
 
-  <h1 class="h3 mb-3 font-weight-normal">You've found <span class="font-italic">"{{ waypoint.name }}"</span></h1>
-  <form class="form-signin" method="POST" style="max-width: 330px; margin: 0 auto;" action="{{ url_for('main.report') }}" a>
-
-    {{ form.hidden_tag() }}
-  {% for field in form if field.widget.input_type != 'hidden' %}
-    {{ field(size=80, class_='form-control') }}
- {% endfor %}
-
-</form>
-
-</div>
-
-</body>
-</html>
+{% endblock %}

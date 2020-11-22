@@ -1,7 +1,7 @@
 import hashlib
 import string
 from datetime import datetime
-from random import random
+from random import choices
 
 from sqlalchemy import distinct
 
@@ -17,7 +17,14 @@ class Team(db.Model):
 
     @property
     def found_total(self):
-        return self.waypoint_founds.with_entities(distinct(TeamFoundWaypoint.id)).count()
+
+        mapping = {}
+        for f in TeamFoundWaypoint.query.order_by(TeamFoundWaypoint.timestamp.asc()).all():
+            mapping[f.waypoint_id] = f.team_id
+
+        total = len([k for k, v in mapping.items() if v == self.id])
+
+        return total
 
 
 class Waypoint(db.Model):
@@ -29,7 +36,7 @@ class Waypoint(db.Model):
     coord_x = db.Column(db.Float)
     coord_y = db.Column(db.Float)
 
-    team_founds = db.relationship("TeamFoundWaypoint", backref="waypoint", lazy=False)
+    team_founds = db.relationship("TeamFoundWaypoint", backref="waypoint", lazy='dynamic')
 
     def __init__(self, name, description, coords):
         self.name = name
@@ -37,12 +44,21 @@ class Waypoint(db.Model):
         self.coord_x, self.coord_y = coords
 
         # generate pseudo random token
-        self.token = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
+        self.token = ''.join(choices(string.ascii_uppercase + string.digits, k=16))
+
+    @property
+    def owners(self):
+        """King of the hill style finding"""
+        query = TeamFoundWaypoint.query.filter_by(waypoint_id=self.id)
+        query = query.order_by(TeamFoundWaypoint.timestamp.desc()).limit(1)
+
+        return (tfw.team for tfw in query.all())
 
 
 class TeamFoundWaypoint(db.Model):
     id = db.Column(db.Integer, autoincrement=True, unique=True, index=True, primary_key=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    signature = db.Column(db.String(20))
 
     team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
     waypoint_id = db.Column(db.Integer, db.ForeignKey('waypoint.id'))

@@ -1,5 +1,9 @@
+sqlalchemy
+wtforms
 Flask~=1.1.2
 Flask-Migrate
 Flask-sqlalchemy
+Flask-WTF
+Flask-BasicAuth
 qrcode~=6.1
 Pillow~=8.0.1

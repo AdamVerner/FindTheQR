@@ -1,21 +1,20 @@
 let layer;
+let m;
 
 document.addEventListener("DOMContentLoaded", function(){
 
     Loader.async = true;
-    console.log('calling Loader');
     Loader.load(null, null, function () {
-        console.log('Loading stuff');
 
-        const center = SMap.Coords.fromWGS84(14.41790, 50.12655);
-        const map = JAK.gel("map");
-        const m = new SMap(JAK.gel("map"), center, 9);
+        m = new SMap(JAK.gel("map"), SMap.Coords.fromWGS84(14.430, 50.084), 13);
+        // Grow map to the size of it's parent element
+        m.addControl(new SMap.Control.Sync());
+
         m.addDefaultLayer(SMap.DEF_SMART_BASE).enable();
         m.addDefaultControls();
 
-        // Grow map to the size of it's parent element
-        const sync = new SMap.Control.Sync();
-        m.addControl(sync);
+        var mouse = new SMap.Control.Mouse(SMap.MOUSE_PAN | SMap.MOUSE_WHEEL | SMap.MOUSE_ZOOM); /* Ovládání myší */
+        m.addControl(mouse);
 
         // create marker layer we will later fill
         layer = new SMap.Layer.Marker();
@@ -24,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
         console.log('pasting coords into map');
         //{% for p in waypoints %}
-        let card = addPoint("{{ p.coord_x }}", "{{ p.coord_y }}", "{{ p.name }}", "{{p.description}}");
+        addPoint("{{ p.coord_x }}", "{{ p.coord_y }}", "{{ p.name }}", "{{p.description}}");
         //{% endfor %}
 
     });

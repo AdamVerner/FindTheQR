@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% from "components/form.html" import render_form %}
+
+
+{% block head %}
+  <script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
+  <script type="text/javascript" src="{{ url_for('main.map_gen') }}"></script>
+  <script>
+
+      function click(e, elm) { /* Došlo ke kliknutí, spočítáme kde */
+          var coords = SMap.Coords.fromEvent(e.data.event, m);
+          console.log(coords);
+          console.log(coords.toWGS84(2));
+          document.getElementById('coord_x').value = coords.x;
+          document.getElementById('coord_y').value = coords.y;
+      }
+
+      function waitForElement(){
+
+          console.log('adding listener' + typeof m);
+          if(typeof m !== "undefined"){
+              m.getSignals().addListener(window, "map-click", click); /* Při signálu kliknutí volat tuto funkci */
+          }
+          else{
+              setTimeout(waitForElement, 250);
+          }
+      }
+      waitForElement();
+
+  </script>
+
+  <style>
+    html, body {
+      height: 100%;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+
+  <div class="row row-eq-height pt-3" style="display: flex;">
+    <div class="col-md-8" style="min-height: 50vh;">
+      <div id="map" class="h-100 rounded"></div>
+    </div>
+    <div class="col-md-4" style="max-height: 50vh;">
+      {{ render_form(form) }}
+    </div>
+  </div>
+{% endblock %}
