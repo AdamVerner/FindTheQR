@@ -11,7 +11,7 @@ from app.routes import admin_bp as bp
 @bp.route('/')
 @bp.route('/index')
 @bp.route('/index.html')
-# # @auth.required
+@auth.required
 def index():
 
     teams = Team.query.all()[::-1]
@@ -26,12 +26,13 @@ def index():
 
 
 @bp.route('/logout')
+@auth.required
 def fake_logout():
     return redirect(url_for('main.index'))
 
 
 @bp.route('/waypoints/add', methods=['GET', 'POST'])
-# @auth.required
+@auth.required
 def add_waypoint():
     form = AddWaypoint()
 
@@ -45,7 +46,7 @@ def add_waypoint():
 
 
 @bp.route('/teams/add', methods=['GET', 'POST'])
-# @auth.required
+@auth.required
 def add_team():
     form = AddTeam()
 
@@ -60,7 +61,7 @@ def add_team():
 
 
 @bp.route('/team/<int:id>/remove', methods=['GET', 'POST'])
-# @auth.required
+@auth.required
 def remove_team(id):
     t = Team.query.filter_by(id=id).first_or_404()
     t.waypoint_founds.delete()
@@ -71,7 +72,7 @@ def remove_team(id):
 
 
 @bp.route('/waypoint/<int:id>/remove', methods=['GET', 'POST'])
-# @auth.required
+@auth.required
 def remove_waypoint(id):
     w = Waypoint.query.filter_by(id=id).first_or_404()
     Waypoint.query.filter_by(id=id).delete()
@@ -82,7 +83,7 @@ def remove_waypoint(id):
 
 
 @bp.route('/find/<int:id>/remove', methods=['GET', 'POST'])
-# @auth.required
+@auth.required
 def remove_find(id):
     tw = TeamFoundWaypoint.query.filter_by(id=id).first_or_404()
     flash(f'"{tw.waypoint.name} - {tw.signature}" removed')
