@@ -9,7 +9,7 @@ from app.routes import bp
 @bp.route('/found/<token>', methods=['GET', 'POST'])
 def found(token: str):
     session['hidden_token'] = token
-    return redirect('.hidden_found')
+    return redirect(url_for('.hidden_found'))
 
 
 @bp.route('/found', methods=['GET', 'POST'])
