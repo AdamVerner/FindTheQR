@@ -15,12 +15,16 @@ auth = BasicAuth()
 
 def create_app():
     app = Flask(__name__)
-    app.secret_key = str(getrandbits(64))
+
+    if not os.path.exists('./app_secret.txt'):
+        with open('./app_secret.txt', 'w') as f:
+            f.write(str(getrandbits(64)))
+
     if app.debug:
         print('setting weak password for development')
         app.secret_key = 'SuperSecret'
 
-    app.secret_key = str(getrandbits(64)) if not app.debug else 'SuperSecret'
+    app.secret_key = open('./app_secret.txt').read() if not app.debug else 'SuperSecret'
     app.config.setdefault('SQLALCHEMY_DATABASE_URI', 'sqlite:///../app.db')
     app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
     app.config.setdefault('BASIC_AUTH_USERNAME', 'admin')
