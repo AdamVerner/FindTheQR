@@ -14,10 +14,8 @@ def found(token: str):
 
 @bp.route('/found', methods=['GET', 'POST'])
 def hidden_found():
-    token = session['hidden_token']
-    session.pop('hidden_token')
 
-    waypoint = Waypoint.query.filter_by(token=token).first_or_404()
+    waypoint = Waypoint.query.filter_by(token=session['hidden_token']).first_or_404()
     teams = Team.query.all()
 
     form = ClaimWaypoint(teams)
@@ -31,6 +29,7 @@ def hidden_found():
         session['name'] = form.name.data
 
         flash(f'successfully claimed a point for {id}')
+        session.pop('hidden_token')
         return redirect(url_for('main.index'))
 
     return render_template('found.html', waypoint=waypoint, teams=teams, form=form)
