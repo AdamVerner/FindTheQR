@@ -26,7 +26,6 @@ def index():
 
 
 @bp.route('/logout')
-@auth.required
 def fake_logout():
     return redirect(url_for('main.index'))
 
