@@ -2,8 +2,9 @@ import os
 from io import StringIO, BytesIO
 
 import qrcode
-from flask import send_file, url_for, render_template
+from flask import send_file, url_for, render_template, Response
 from PIL import ImageDraw, ImageFont
+from werkzeug.wsgi import FileWrapper
 
 from app.models import Waypoint
 from app.routes import admin_bp as bp
@@ -36,7 +37,8 @@ def qr_image(token):
     img.save(img_buf)
     img_buf.seek(0)
 
-    return send_file(img_buf, mimetype='image/png')
+    # https://stackoverflow.com/questions/50087728/alternative-of-send-file-in-flask-on-pythonanywhere
+    return Response(FileWrapper(img_buf), mimetype="image/png", direct_passthrough=True)
 
 
 @bp.route('/all_images')
