@@ -28,7 +28,7 @@ def hidden_found():
 
         session['name'] = form.name.data
 
-        flash(f'successfully claimed a point for {id}')
+        flash(f'{waypoint.name} úspěšně nalezen.')
         session.pop('hidden_token')
         return redirect(url_for('main.index'))
 
