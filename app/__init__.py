@@ -1,5 +1,6 @@
 import os
 import logging
+from datetime import datetime
 from random import getrandbits
 
 from flask import Flask
@@ -29,6 +30,7 @@ def create_app():
     app.config.setdefault('SQLALCHEMY_TRACK_MODIFICATIONS', False)
     app.config.setdefault('BASIC_AUTH_USERNAME', 'admin')
     app.config.setdefault('BASIC_AUTH_PASSWORD', 'admin')
+    app.config.setdefault('END_DATE', '2021-03-14T20:00:00+01:00')
 
     db.init_app(app)
     auth.init_app(app)
@@ -43,6 +45,14 @@ def create_app():
 
     app.register_blueprint(main_bp)
     app.register_blueprint(admin_bp, url_prefix='/secret')
+
+    def datetimeformat(value, format='%H:%M / %d-%m-%Y'):
+        return value.strftime(format)
+
+    app.add_template_filter(datetimeformat, 'datetimeformat')
+    app.add_template_filter(datetime.fromisoformat, 'iso8601_to_time')
+
+    app.add_template_global(app.config.get('END_DATE'), 'end_date')
 
     app.logger.setLevel(logging.DEBUG)
 

@@ -6,6 +6,10 @@
 <script type="text/javascript" src="https://api.mapy.cz/loader.js"></script>
 <script type="text/javascript" src="{{url_for('main.map_gen')}}"></script>
 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 <style>
   html, body {
       height: 100%;
@@ -14,6 +18,35 @@
       background-color: #e9ecef;
   }
 </style>
+<script>
+  $(function() { $('#timeIsRunningOutModal').modal('show'); });
+
+// Set the date we're counting down to
+  var countDownDate = new Date("{{ end_date }}").getTime();
+  var x = setInterval(function() {
+    var distance = countDownDate - new Date().getTime();
+
+    var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+    let s = ''
+    s+= days;    if (days == 1)    s += " den ";      else s += " dní ";
+    s+= hours;   if (hours == 1)   s += " hodina ";   else s += " hodin ";
+    s+= minutes; if (minutes == 1) s += " minuta a "; else s += " minut a ";
+    s+= seconds; if (seconds == 1) s += " vteřina. "; else s += " vteřin.";
+
+    $("#remainingTime")[0].innerHTML = "Zbývá " + s;
+
+    if (distance < 0) {
+        clearInterval(x);
+        $("#modal-inner-content")[0].innerHTML = "<h5><b>Soutěž již skoničla</b></h5>";
+    }
+
+  }, 1000);
+
+  </script>
 {% endblock %}
 
 {% block content %}
@@ -44,4 +77,27 @@
             </ul>
         </div>
     </div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="timeIsRunningOutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Budeme končit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="modal-inner-content">
+        {{ end_date | iso8601_to_time | datetimeformat('%d.%m  %H:%M') }} dojde k ukončení soutěže.
+        <h5 style="font-weight: bold" id="remainingTime">Time till the end</h5>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 {% endblock %}
